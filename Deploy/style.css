@@ -1,13 +1,41 @@
-body {
-    font-family: 'Inter', sans-serif;
+html, body {
+    height: 100%;
     background-color: #ffffff;
-    transition: background-color 0.3s ease;
+    color: #1e293b;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body.dark {
     background-color: #0f172a;
+    color: #f8fafc;
 }
 
+/* === Aplicar fundo no container principal === */
+main {
+    flex: 1;
+    width: 100%;
+    background-color: inherit;
+    padding: 2rem;
+}
+
+/* === Cabeçalho escuro === */
+.dark header {
+    background-color: #1e293b;
+    border-bottom: 1px solid #334155;
+}
+
+/* === Rodapé (área de input) escura === */
+.dark .bg-white {
+    background-color: #1e293b !important;
+    border-top: 1px solid #334155;
+}
+
+/* Corrige a borda do input no dark */
+.dark input {
+    background-color: #0f172a;
+    color: #f8fafc;
+    border-color: #334155;
+}
 .chat-message.user {
     background-color: #3b82f6;
     color: white;
@@ -59,8 +87,74 @@ body.dark {
     text-overflow: ellipsis;
     max-width: 180px;          /* Limite de largura por célula */
 }
-
+/* ============================= */
+/* CORREÇÃO CABEÇALHO TABELA NO DARK MODE */
+/* ============================= */
+/* === Cabeçalho da Tabela === */
 .chat-message .prose th {
-    background-color: #f3f4f6;
+    background-color: #f3f4f6;       /* Claro padrão */
+    color: #1e293b;                  /* Texto escuro */
     font-weight: 600;
+    padding: 6px 8px;
+    text-align: left;
+    border: 1px solid #d1d5db;
+}
+
+/* === Cabeçalho da Tabela no Modo Escuro === */
+.dark .chat-message .prose th {
+    background-color: #334155 !important;  /* Fundo padrão dark */
+    color: #f8fafc !important;              /* Texto branco */
+    border-color: #475569 !important;       /* Borda sutil escura */
+}
+/* ===== CABEÇALHO CORRETA NO MODO ESCURO ===== */
+header h1 {
+    color: #1e293b;
+}
+.dark header h1 {
+    color: #f8fafc;
+}
+
+/* ===== TABELA ESCURA ===== */
+.chat-message .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+    table-layout: auto;
+    background-color: #f8fafc;
+}
+
+.chat-message .prose th,
+.chat-message .prose td {
+    border: 1px solid #d1d5db;
+    padding: 6px 8px;
+    text-align: left;
+    white-space: nowrap;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #1e293b;
+    background-color: #ffffff;
+}
+
+/* ===== TEMA ESCURO PARA TABELA ===== */
+.dark .chat-message .prose table {
+    background-color: #1e293b;
+}
+
+.dark .chat-message .prose th,
+.dark .chat-message .prose td {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border-color: #334155;
+}
+
+/* ===== COMENTÁRIO ABAIXO DA TABELA ===== */
+.chat-message .prose p {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #4b5563;
+}
+
+.dark .chat-message .prose p {
+    color: #cbd5e1;
 }
