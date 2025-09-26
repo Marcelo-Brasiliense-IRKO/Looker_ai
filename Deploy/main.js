@@ -60,7 +60,9 @@ function addMessage(text, sender) {
     const container = document.getElementById('chat-container');
 
     const messageDiv = document.createElement('div');
-    messageDiv.className = `chat-message ${sender} p-4 w-full max-w-full sm:max-w-[85%]`;
+    messageDiv.className = `chat-message ${sender} p-3 px-4 w-fit rounded-2xl ${
+    sender === 'user' ? 'ml-auto max-w-[60%]' : 'max-w-[85%]'
+    }`;
     
     const messageContent = `
         <div class="flex items-start space-x-2">
