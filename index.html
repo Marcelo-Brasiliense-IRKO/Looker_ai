@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timesheets AI - Chat AI Moderno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        // Inicializa o tema antes da renderização
+        document.documentElement.style.visibility = 'hidden';
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.style.visibility = '';
+        });
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+        body.dark {
+            background-color: #0f172a;
+        }
+        .chat-message.user {
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 16px 16px 0 16px;
+            margin-left: auto;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .chat-message.ai {
+            background-color: #f8fafc;
+            color: #1e293b;
+            border-radius: 16px 16px 16px 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .dark .chat-message.ai {
+            background-color: #1e293b;
+            color: #f8fafc;
+        }
+        .dark .chat-message.user {
+            background-color: #1d4ed8;
+        }
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+            margin: 0 2px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 8px;
+            font-size: 0.875rem;
+        }
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 4px 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-100 py-3 px-6 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                <i data-feather="bar-chart-2" class="text-blue-500"></i>
+            </div>
+            <h1 class="text-lg font-medium text-gray-800">Timesheets Analytics</h1>
+        </div>
+        <button id="theme-toggle" class="p-1.5 rounded-full hover:bg-gray-50 dark:hover:bg-slate-700">
+            <i data-feather="moon" class="text-gray-400 w-4 h-4 dark:hidden"></i>
+            <i data-feather="sun" class="text-yellow-300 w-4 h-4 hidden dark:block"></i>
+        </button>
+    </header>
+
+    <!-- Chat Container -->
+    <main class="flex-1 overflow-y-auto p-4 max-w-2xl mx-auto w-full">
+        <div class="space-y-3" id="chat-container">
+            <!-- Mensagem de boas-vindas -->
+            <div class="chat-message ai p-3 max-w-[85%] w-fit">
+                <div class="flex items-start space-x-2">
+                    <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
+                        <i data-feather="bar-chart-2" class="text-blue-500 w-3 h-3"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm">Olá! Sou o Timesheets Analytics, seu assistente de métricas.</p>
+                        <p class="text-xs text-gray-500 mt-1">Posso te mostrar insights sobre atividades, clientes e produtividade dos colaboradores.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Área de Input -->
+    <div class="bg-white border-t border-gray-100 p-3">
+        <div class="max-w-2xl mx-auto">
+            <form id="chat-form" class="flex items-center space-x-2">
+                <div class="flex-1 relative">
+                    <input 
+                        type="text" 
+                        id="message-input" 
+                        placeholder="Digite sua mensagem..." 
+                        class="w-full px-3 py-2 text-sm rounded-full border border-gray-200 focus:outline-none focus:border-gray-300"
+                        autocomplete="off"
+                    >
+                </div>
+                <button 
+                    type="submit" 
+                    class="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                >
+                    <i data-feather="send" class="w-4 h-4"></i>
+                </button>
+            </form>
+            <p class="text-xs text-gray-400 mt-1.5 text-center">
+                Timesheets AI - Análise de dados em tempo real do nosso aplicativo Timesheets
+            </p>
+        </div>
+    </div>
+
+<script>
+    feather.replace();
+    
+    // Tema
+    const themeToggle = document.getElementById('theme-toggle');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    const currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark');
+    }
+    
+    themeToggle.addEventListener('click', function() {
+        const isDark = document.body.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        feather.replace();
+    });
+
+    // Chat ID persistente
+    let chatId = localStorage.getItem('chatId');
+    if (!chatId) {
+        chatId = 'chat_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('chatId', chatId);
+    }
+    
+    document.getElementById('chat-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const input = document.getElementById('message-input');
+        const message = input.value.trim();
+        
+        if (message) {
+            addMessage(message, 'user');
+            input.value = '';
+
+            showTypingIndicator();
+            
+            // API
+            fetch('https://n8nexterno-n8n-webhook.77j4p8.easypanel.host/webhook/timesheets_ai', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },  
+                body: JSON.stringify({ 
+                    message: message,
+                    chatId: chatId 
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                removeTypingIndicator();
+                if (data.response) {
+                    addMessage(data.response, 'ai');
+                } else {
+                    addMessage('Ocorreu um erro ao processar sua solicitação.', 'ai');
+                }
+            })
+            .catch(error => {
+                removeTypingIndicator();
+                addMessage('Erro de conexão com o servidor.', 'ai');
+                console.error('Error:', error);
+            });
+        }
+    });
+    
+    function addMessage(text, sender) {
+        const container = document.getElementById('chat-container');
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${sender} p-4 max-w-[80%] w-fit ${sender === 'user' ? 'ml-auto' : ''}`;
+        
+        const messageContent = `
+            <div class="flex items-start space-x-2">
+                <div class="flex-shrink-0 w-6 h-6 rounded-full ${sender === 'ai' ? 'bg-blue-100' : 'bg-blue-500'} flex items-center justify-center">
+                    <i data-feather="${sender === 'ai' ? 'bar-chart-2' : 'user'}" class="${sender === 'ai' ? 'text-blue-500' : 'text-white'} w-3 h-3"></i>
+                </div>
+                <div class="text-sm prose max-w-none">${text}</div>
+            </div>
+        `;
+        
+        messageDiv.innerHTML = messageContent;
+        container.appendChild(messageDiv);
+        feather.replace();
+        
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    function showTypingIndicator() {
+        const container = document.getElementById('chat-container');
+        
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'chat-message ai p-3 max-w-[85%] w-fit';
+        typingDiv.id = 'typing-indicator';
+        
+        const typingContent = `
+            <div class="flex items-start space-x-2">
+                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
+                    <i data-feather="bar-chart-2" class="text-blue-500 w-3 h-3"></i>
+                </div>
+                <div class="typing-indicator flex space-x-1 items-center">
+                    <span class="animate-bounce" style="animation-delay: 0ms"></span>
+                    <span class="animate-bounce" style="animation-delay: 150ms"></span>
+                    <span class="animate-bounce" style="animation-delay: 300ms"></span>
+                </div>
+            </div>
+        `;
+        
+        typingDiv.innerHTML = typingContent;
+        container.appendChild(typingDiv);
+        feather.replace();
+        
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    function removeTypingIndicator() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
+    }
+</script>
+
+</body>
+</html>
