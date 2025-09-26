@@ -1,8 +1,7 @@
 FROM nginx:alpine
 
-# Remove arquivos default do nginx
+# Remove os arquivos padrão
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copia o nosso index.html para a pasta correta
-COPY index.html /usr/share/nginx/html/index.html
-
+# Copia todos os arquivos da pasta local para o HTML do NGINX
+COPY . /usr/share/nginx/html/
