@@ -43,6 +43,26 @@
         .dark .chat-message.user {
             background-color: #1d4ed8;
         }
+        .chat-message .prose table {
+            display: block;
+            overflow-x: auto;
+            max-width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+            white-space: nowrap; /* Evita quebra de palavras que bagunçam colunas */
+        }
+
+        .chat-message .prose th,
+        .chat-message .prose td {
+            border: 1px solid #d1d5db;
+            padding: 6px 10px;
+            text-align: left;
+        }
+
+        .chat-message .prose th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
         .typing-indicator span {
             display: inline-block;
             width: 6px;
