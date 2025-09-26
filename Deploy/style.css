@@ -45,15 +45,18 @@ body.dark {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.75rem;
+    table-layout: auto; /* Ajusta largura automaticamente */
 }
 
 .chat-message .prose th,
 .chat-message .prose td {
     border: 1px solid #d1d5db;
-    padding: 6px 8px;
+    padding: 6px 10px;
     text-align: left;
-    white-space: normal; /* PERMITE quebras de linha */
-    word-break: break-word; /* quebra palavras longas */
+    white-space: nowrap;       /* NÃO permite quebra de linha */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;          /* Limite de largura por célula */
 }
 
 .chat-message .prose th {
